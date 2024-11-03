@@ -1,5 +1,5 @@
-import React from 'react'
-import Todocard from './Todocard';
+import React from "react";
+import Todocard from "./Todocard";
 
 function Todolist(props) {
   const { todos, selectedTab } = props;
@@ -14,12 +14,16 @@ function Todolist(props) {
     <>
       {filteredList.map((todo, todoIndex) => {
         return (
-        <Todocard key={todoIndex} todo={todo} {...props} todoIndex={todos.findIndex(val=> val.input === todo.input)}></Todocard>
-      )
-    })}
-    
+          <Todocard
+            key={todo.id}
+            todo={todo}
+            {...props}
+            todoIndex={todoIndex}
+          ></Todocard>
+        );
+      })}
     </>
-  )
+  );
 }
 
-export default Todolist
+export default Todolist;

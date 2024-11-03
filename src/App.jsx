@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 function App() {
   const [todos, setTodos] = useState([]);
   const [selectedTab, setSelectedTab] = useState("All");
+
   useEffect(() => {
     if (!localStorage || !localStorage.getItem("todo-app")) {
       return;
@@ -14,28 +15,37 @@ function App() {
     let db = JSON.parse(localStorage.getItem("todo-app"));
     setTodos(db.todos);
   }, []);
+
   const saveHandler = (currTodos) => {
     localStorage.setItem("todo-app", JSON.stringify({ todos: currTodos }));
   };
+
   const addHandler = (newTodo) => {
-    const newTodoList = [...todos, { input: newTodo, complete: false }];
+    const newTodoList = [
+      ...todos,
+      { id: Date.now(), input: newTodo, complete: false },
+    ];
     setTodos(newTodoList);
-    saveHandler(newTodoList); 
+    saveHandler(newTodoList);
   };
-  const completeHandler = (index) => {
-    const newtodoList = [...todos];
-    const completeTodo = todos[index];
-    completeTodo["complete"] = true;
-    newtodoList[index] = completeTodo;
-    setTodos(newtodoList);
-    saveHandler(newtodoList); 
-  };
-  const deleteHandler = (index) => {
-    let newtodoList = todos.filter((val, valindex) => {
-      return valindex !== index;
+
+  const completeHandler = (id) => {
+    console.log("completeHandler called with id:", id);
+    const newtodoList = todos.map((todo) => {
+      if (todo.id === id) {
+        return { ...todo, complete: !todo.complete };
+      }
+      return todo;
     });
     setTodos(newtodoList);
-    saveHandler(newtodoList); 
+    saveHandler(newtodoList);
+  };
+  const deleteHandler = (id) => {
+    let newtodoList = todos.filter((val) => {
+      return val.id !== id;
+    });
+    setTodos(newtodoList);
+    saveHandler(newtodoList);
   };
 
   return (
